@@ -5,7 +5,7 @@ from pprint import pprint
 book = xlrd.open_workbook("data/statistics.xlsx")
 sheet = book.sheet_by_name("Лист4")
 
-database = psycopg2.connect(database="postgres", user="user1", password="password", host="localhost", port="5432")
+database = psycopg2.connect(database="test", user="user1", password="password", host="localhost", port="5432")
 cursor = database.cursor()
 
 query = """INSERT INTO test (ID, COL_1, COL_2, COL_3, COL_4, COL_5, COL_6, COL_7, COL_8, COL_9,
