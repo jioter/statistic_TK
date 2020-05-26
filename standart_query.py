@@ -3,18 +3,27 @@ database = psycopg2.connect(database="test", user="user1", password="password", 
 cursor = database.cursor()
 
 def query(col_name):
-    get_col_name_9 = """SELECT %s FROM test WHERE id_count=2 GROUP BY %s """ % (col_name, col_name)
-    cursor.execute(get_col_name_9)
-    col_name_9 = [item for t in cursor.fetchall() for item in t]
-    print(col_name_9)
+    get_col_name = """SELECT %s FROM test WHERE id_count=2 GROUP BY %s """ % (col_name, col_name)
+    cursor.execute(get_col_name)
+    col_name_full = [item for t in cursor.fetchall() for item in t]
+    # print(col_name_9)
+    with open("data/statistics.txt", "a") as f:
+        f.write(str(col_name_full))
+        f.write("\n")
+        f.close()
 
+    query_data = """SELECT DISTINCT(%s) FROM test WHERE %s <> '' AND id_count > 3 """ % (col_name, col_name)
+    cursor.execute(query_data)
+    data = cursor.fetchall()
+    data = [item for t in data for item in t]
+    data = [el.replace("'", "''") for el in data]
 
-    query9 = """SELECT DISTINCT(%s) FROM test WHERE %s <> '' AND id_count > 3 """ % (col_name, col_name)
-    cursor.execute(query9)
-    records9 = cursor.fetchall()
-    records9 = [item for t in records9 for item in t]
-    records9 = [el.replace("'","''") for el in records9]
-
-    for el in records9:
+    for el in data:
         cursor.execute("""SELECT %s,Count(*) FROM test WHERE %s='%s' GROUP BY %s """ % (col_name, col_name, el, col_name))
-        print(cursor.fetchall())
+        rez = cursor.fetchall()
+        # print(rez)
+        with open("data/statistics.txt", "a") as f:
+            f.write(str(rez))
+            f.write("\n")
+            f.close()
+

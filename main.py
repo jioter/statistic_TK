@@ -7,133 +7,24 @@ from standart_query_title_2 import query_with_subtitle
 database = psycopg2.connect(database="test", user="user1", password="password", host="localhost", port="5432")
 cursor = database.cursor()
 
-### !!! COLUMN => 1 <= !!! ###
 
-
-get_col_name = """SELECT col_1 FROM test WHERE id_count=2 GROUP BY col_1"""
-cursor.execute(get_col_name)
-col_name = [item for t in cursor.fetchall() for item in t]
-print(col_name)
-
-
-query1 = """SELECT DISTINCT(col_1) FROM test WHERE col_1 <> '' AND id_count > 3 """
-
-cursor.execute(query1)
-records1 = cursor.fetchall()
-# print(records1)
-
-for el in records1:
-    cursor.execute("""SELECT col_1,Count(*) FROM test WHERE col_1='%s' GROUP BY col_1""" % el)
-    print(cursor.fetchall())
-
-### !!! COLUMN => 2 <= !!! ###
-get_col_name_2 = """SELECT col_2 FROM test WHERE id_count=2 GROUP BY col_2"""
-cursor.execute(get_col_name_2)
-col_name_2 = [item for t in cursor.fetchall() for item in t]
-print(col_name_2)
-
-
-query2 = """SELECT DISTINCT(col_2) FROM test WHERE col_2 <> '' AND id_count > 3 """
-
-cursor.execute(query2)
-records2 = cursor.fetchall()
-# pprint(records2)
-
-for el in records2:
-    cursor.execute("""SELECT col_2,Count(*) FROM test WHERE col_2='%s' GROUP BY col_2""" % el)
-    print(cursor.fetchall())
-
-### !!! COLUMN => 3 <= !!! ###
-get_col_name_3 = """SELECT col_3 FROM test WHERE id_count=2 GROUP BY col_3"""
-cursor.execute(get_col_name_3)
-col_name_3 = [item for t in cursor.fetchall() for item in t]
-print(col_name_3)
-
-
-query3 = """SELECT DISTINCT(col_3) FROM test WHERE col_3 <> '' AND id_count > 3 """
-
-cursor.execute(query3)
-records3 = cursor.fetchall()
-records3 = [item for t in records3 for item in t]
-records3 = [el.replace("'","''") for el in records3]
-
-for el in records3:
-    cursor.execute("""SELECT col_3,Count(*) FROM test WHERE col_3='%s' GROUP BY col_3""" % el)
-    print(cursor.fetchall())
-
-### !!! COLUMN => 4 <= !!! ###
-get_col_name_4 = """SELECT col_4 FROM test WHERE id_count=2 GROUP BY col_4"""
-cursor.execute(get_col_name_4)
-col_name_4 = [item for t in cursor.fetchall() for item in t]
-print(col_name_4)
-
-
-query4 = """SELECT DISTINCT(col_4) FROM test WHERE col_4 <> '' AND id_count > 3 """
-cursor.execute(query4)
-records4 = cursor.fetchall()
-records4 = [item for t in records4 for item in t]
-records4 = [el.replace("'","''") for el in records4]
-
-for el in records4:
-    cursor.execute("""SELECT col_4,Count(*) FROM test WHERE col_4='%s' GROUP BY col_4""" % el)
-    print(cursor.fetchall())
-
-### !!! COLUMN => 5 <= !!! ###
-get_col_name_5 = """SELECT col_5 FROM test WHERE id_count=2 GROUP BY col_5"""
-cursor.execute(get_col_name_5)
-col_name_5 = [item for t in cursor.fetchall() for item in t]
-print(col_name_5)
-
-
-query5 = """SELECT DISTINCT(col_5) FROM test WHERE col_5 <> '' AND id_count > 3 """
-cursor.execute(query5)
-records5 = cursor.fetchall()
-records5 = [item for t in records5 for item in t]
-records5 = [el.replace("'","''") for el in records5]
-
-for el in records5:
-    cursor.execute("""SELECT col_5,Count(*) FROM test WHERE col_5='%s' GROUP BY col_5""" % el)
-    print(cursor.fetchall())
-
-### !!! COLUMN => 6 <= !!! ###
-get_col_name_6 = """SELECT col_6 FROM test WHERE id_count=2 GROUP BY col_6"""
-cursor.execute(get_col_name_6)
-col_name_6 = [item for t in cursor.fetchall() for item in t]
-print(col_name_6)
-
-
-query6 = """SELECT DISTINCT(col_6) FROM test WHERE col_6 <> '' AND id_count > 3 """
-cursor.execute(query6)
-records6 = cursor.fetchall()
-records6 = [item for t in records6 for item in t]
-records6 = [el.replace("'","''") for el in records6]
-
-for el in records6:
-    cursor.execute("""SELECT col_6,Count(*) FROM test WHERE col_6='%s' GROUP BY col_6""" % el)
-    print(cursor.fetchall())
-
-### !!! COLUMN => 7 <= !!! ###
-get_col_name_7 = """SELECT col_7 FROM test WHERE id_count=2 GROUP BY col_7"""
-cursor.execute(get_col_name_7)
-col_name_7 = [item for t in cursor.fetchall() for item in t]
-print(col_name_7)
-
-
-query7 = """SELECT DISTINCT(col_7) FROM test WHERE col_7 <> '' AND id_count > 3 """
-cursor.execute(query7)
-records7 = cursor.fetchall()
-records7 = [item for t in records7 for item in t]
-records7 = [el.replace("'","''") for el in records7]
-
-for el in records7:
-    cursor.execute("""SELECT col_7,Count(*) FROM test WHERE col_7='%s' GROUP BY col_7""" % el)
-    print(cursor.fetchall())
+query("col_1")
+query("col_2")
+query("col_3")
+query("col_4")
+query("col_5")
+query("col_6")
+query("col_7")
 
 ### !!! COLUMN => 8 <= !!! ###
 get_col_name_8 = """SELECT col_8 FROM test WHERE id_count=2 GROUP BY col_8"""
 cursor.execute(get_col_name_8)
 col_name_8 = [item for t in cursor.fetchall() for item in t]
-print(col_name_8)
+# print(col_name_8)
+with open("data/statistics.txt", "a") as f:
+    f.write(str(col_name_8))
+    f.write("\n")
+    f.close()
 
 query8 = """SELECT DISTINCT(col_8) FROM test WHERE col_8 <> '' AND id_count > 3 AND col_8 NOT IN ('-') """
 cursor.execute(query8)
@@ -157,25 +48,14 @@ for el in flat_list_2:
         d[el] = 1
     else:
         d[el] += 1
-print(d)
-
-### !!! COLUMN => 9 <= !!! ###
-get_col_name_9 = """SELECT col_9 FROM test WHERE id_count=2 GROUP BY col_9"""
-cursor.execute(get_col_name_9)
-col_name_9 = [item for t in cursor.fetchall() for item in t]
-print(col_name_9)
+# print(d)
+with open("data/statistics.txt", "a") as f:
+    f.write(str(d))
+    f.write("\n")
+    f.close()
 
 
-query9 = """SELECT DISTINCT(col_9) FROM test WHERE col_9 <> '' AND id_count > 3 """
-cursor.execute(query9)
-records9 = cursor.fetchall()
-records9 = [item for t in records9 for item in t]
-records9 = [el.replace("'","''") for el in records9]
-
-for el in records9:
-    cursor.execute("""SELECT col_9,Count(*) FROM test WHERE col_9='%s' GROUP BY col_9""" % el)
-    print(cursor.fetchall())
-
+query("col_9")
 query("col_10")
 query("col_11")
 query("col_12")
@@ -264,6 +144,9 @@ query_with_subtitle("col_85", "col_94")
 query("col_95")
 query("col_96")
 
+print(query_with_subtitle("col_85", "col_94"))
+from standart_query_title_2 import data
+print(data)
 
 
 cursor.close()
