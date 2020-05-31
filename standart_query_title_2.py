@@ -23,7 +23,7 @@ def query_with_subtitle(col_name1, col_name):
 
     query_data = """SELECT DISTINCT(%s) FROM test WHERE %s <> '' AND id_count > 3 """ % (col_name, col_name)
     cursor.execute(query_data)
-    global data
+    # global data
     data = cursor.fetchall()
     data = [item for t in data for item in t]
     data = [el.replace("'", "''") for el in data]
@@ -31,7 +31,7 @@ def query_with_subtitle(col_name1, col_name):
     for el in data:
         cursor.execute("""SELECT %s,Count(*) FROM test WHERE %s='%s' GROUP BY %s """ % (col_name, col_name, el, col_name))
         rez = cursor.fetchall()
-        print(rez)
+        # print(rez)
         with open("data/statistics.txt", "a") as f:
             f.write(str(rez))
             f.write("\n")

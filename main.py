@@ -1,4 +1,3 @@
-from pprint import pprint
 import psycopg2
 
 from standart_query import query
@@ -7,14 +6,69 @@ from standart_query_title_2 import query_with_subtitle
 database = psycopg2.connect(database="test", user="user1", password="password", host="localhost", port="5432")
 cursor = database.cursor()
 
+from standart_query_filtered import query_filter
+from itertools import product
 
-query("col_1")
-query("col_2")
-query("col_3")
-query("col_4")
-query("col_5")
-query("col_6")
-query("col_7")
+global all_data
+all_data = []
+for i in range(1, 7):
+    rez = "col_"+str(i)
+    query(rez)
+    from standart_query import data2
+    all_data.append(data2)
+
+rez = list(product(*all_data))
+print(rez)
+
+for j in range(len(rez)):
+    for i in range(9, 97):
+        rez2 = "col_"+str(i)
+        query_filter(rez2, "col_1", rez[j][0],
+                           "col_2", rez[j][1],
+                           "col_3", rez[j][2],
+                           "col_4", rez[j][3],
+                           "col_5", rez[j][4],
+                           "col_6", rez[j][5])
+
+# test query
+# test_query = """SELECT DISTINCT("col_9") FROM test WHERE "col_9" <> '' AND id_count > 3 AND "col_1"=%s""" % ("'"+rez[0][0]+"'")
+
+# cursor.execute(test_query)
+# test = cursor.fetchall()
+# print(test)
+
+
+
+
+
+
+# query("col_1")
+# from standart_query import data2
+# print(data2)
+#
+# query("col_2")
+# from standart_query import data2
+# print(data2)
+#
+# query("col_3")
+# from standart_query import data2
+# print(data2)
+#
+# query("col_4")
+# from standart_query import data2
+# print(data2)
+#
+# query("col_5")
+# from standart_query import data2
+# print(data2)
+#
+# query("col_6")
+# from standart_query import data2
+# print(data2)
+#
+# query("col_7")
+# from standart_query import data2
+# print(data2)
 
 ### !!! COLUMN => 8 <= !!! ###
 get_col_name_8 = """SELECT col_8 FROM test WHERE id_count=2 GROUP BY col_8"""
@@ -55,20 +109,21 @@ with open("data/statistics.txt", "a") as f:
     f.close()
 
 
-query("col_9")
-query("col_10")
-query("col_11")
-query("col_12")
-query("col_13")
-query("col_14")
-query("col_15")
-query("col_16")
-query("col_17")
-query("col_18")
-query("col_19")
-query("col_20")
-query("col_21")
-query("col_22")
+
+# query("col_9")
+# query("col_10")
+# query("col_11")
+# query("col_12")
+# query("col_13")
+# query("col_14")
+# query("col_15")
+# query("col_16")
+# query("col_17")
+# query("col_18")
+# query("col_19")
+# query("col_20")
+# query("col_21")
+# query("col_22")
 query_with_subtitle("col_23", "col_23")
 query_with_subtitle("col_23", "col_24")
 query_with_subtitle("col_23", "col_25")
@@ -144,9 +199,9 @@ query_with_subtitle("col_85", "col_94")
 query("col_95")
 query("col_96")
 
-print(query_with_subtitle("col_85", "col_94"))
-from standart_query_title_2 import data
-print(data)
+# print(query_with_subtitle("col_85", "col_94"))
+# from standart_query_title_2 import data
+# print("data", data)
 
 
 cursor.close()
