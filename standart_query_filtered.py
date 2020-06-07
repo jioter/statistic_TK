@@ -17,10 +17,7 @@ def query_filter(col_name, filter_col_1, filter_val_1,
         cursor.execute(get_col_name_8)
         col_name_8 = [item for t in cursor.fetchall() for item in t]
 
-        book = openpyxl.load_workbook("data/statistics_calculated.xlsx")
-        sheet = book.active
-        sheet.append(col_name_8)
-        book.save("data/statistics_calculated.xlsx")
+
 
         query8 = """SELECT DISTINCT(%s) FROM test 
         WHERE %s <> '' AND id_count > 3 AND %s NOT IN ('-') 
@@ -56,11 +53,19 @@ def query_filter(col_name, filter_col_1, filter_val_1,
                 d[el] += 1
 
         rez = d.items()
-        for el in rez:
+        if not rez:
+            pass
+        else:
             book = openpyxl.load_workbook("data/statistics_calculated.xlsx")
             sheet = book.active
-            sheet.append(el)
+            sheet.append(col_name_8)
             book.save("data/statistics_calculated.xlsx")
+
+            for el in rez:
+                book = openpyxl.load_workbook("data/statistics_calculated.xlsx")
+                sheet = book.active
+                sheet.append(el)
+                book.save("data/statistics_calculated.xlsx")
 
     else:
         get_col_name = """SELECT %s FROM test WHERE id_count=2 GROUP BY %s """ % (col_name, col_name)
@@ -71,17 +76,6 @@ def query_filter(col_name, filter_col_1, filter_val_1,
         cursor.execute(get_sub_col_name)
         sub_col_name_full = [item for t in cursor.fetchall() for item in t]
 
-        #  Check if column name is not empty.
-        if not col_name_full == ['']:
-            book = openpyxl.load_workbook("data/statistics_calculated.xlsx")
-            sheet = book.active
-            sheet.append(col_name_full)
-            book.save("data/statistics_calculated.xlsx")
-        if not sub_col_name_full == ['']:
-            book = openpyxl.load_workbook("data/statistics_calculated.xlsx")
-            sheet = book.active
-            sheet.append(sub_col_name_full)
-            book.save("data/statistics_calculated.xlsx")
 
         query_data = """SELECT DISTINCT(%s) FROM test 
         WHERE %s <> '' AND id_count > 3 
@@ -99,12 +93,28 @@ def query_filter(col_name, filter_col_1, filter_val_1,
         data2 = [item for t in data2 for item in t]
         data2 = [el.replace("'", "''") for el in data2]
 
-        for el in data2:
-            cursor.execute("""SELECT %s,Count(*) FROM test WHERE %s='%s' GROUP BY %s """ % (col_name, col_name, el, col_name))
-            rez = cursor.fetchall()
+        if not data2:
+            pass
+        else:
+            if not col_name_full == ['']:
+                book = openpyxl.load_workbook("data/statistics_calculated.xlsx")
+                sheet = book.active
+                sheet.append(col_name_full)
+                book.save("data/statistics_calculated.xlsx")
+            if not sub_col_name_full == ['']:
+                book = openpyxl.load_workbook("data/statistics_calculated.xlsx")
+                sheet = book.active
+                sheet.append(sub_col_name_full)
+                book.save("data/statistics_calculated.xlsx")
 
-            book = openpyxl.load_workbook("data/statistics_calculated.xlsx")
-            sheet = book.active
-            sheet.append(rez[0])
-            book.save("data/statistics_calculated.xlsx")
+            for el in data2:
+                cursor.execute("""SELECT %s,Count(*) FROM test WHERE %s='%s' GROUP BY %s """ % (col_name, col_name, el, col_name))
+                rez = cursor.fetchall()
+                book = openpyxl.load_workbook("data/statistics_calculated.xlsx")
+                sheet = book.active
+                sheet.append(rez[0])
+                book.save("data/statistics_calculated.xlsx")
+
+
+        #  Check if column name is not empty.
 
