@@ -1,16 +1,14 @@
 import openpyxl
 import psycopg2
-
 from standart_query import query
 from standart_query_filtered import query_filter
 from itertools import product
-
+from timeit import default_timer as timer
 
 database = psycopg2.connect(database="test", user="user1", password="password", host="localhost", port="5432")
 cursor = database.cursor()
 
 
-global all_data
 all_data = []
 for i in range(1, 7):
     rez = "col_"+str(i)
@@ -22,9 +20,12 @@ for i in range(1, 7):
 rez = list(product(*all_data))
 total_el = len(rez)
 
+start = timer()
 
-for el, j in enumerate(range(len(rez))):
-    print("[", el, "-", total_el, "]", "================", rez[j], "================", )
+for el, j in enumerate(range(len(rez)), 1):
+    end = timer()
+    time = end-start
+    print(f'[{el} - {total_el}] ================{rez[j]}================ {time:.2}s')
     book = openpyxl.load_workbook("data/statistics_calculated.xlsx")
     sheet = book.active
     sheet.append(rez[j])
