@@ -1,12 +1,25 @@
 import openpyxl
-import psycopg2
+# import psycopg2
 from standart_query import query
 from standart_query_filtered import query_filter
 from itertools import product
 from timeit import default_timer as timer
 
-database = psycopg2.connect(database="test", user="user1", password="password", host="localhost", port="5432")
-cursor = database.cursor()
+# database = psycopg2.connect(database="test", user="user1", password="password", host="localhost", port="5432")
+# cursor = database.cursor()
+import sqlite3
+from sqlite3 import Error
+
+
+try:
+    conn = sqlite3.connect(r"data/statistic_db.db")
+    print(sqlite3.version)
+except Error as e:
+    print(e)
+
+
+# db = sqlite3.connect('file:path/to/database?mode=ro', uri=True)
+cursor = conn.cursor()
 
 all_data = []
 for i in range(1, 7):
@@ -49,3 +62,8 @@ cursor.close()
 database.commit()
 
 database.close()
+
+
+if __name__ == '__main__':
+    create_connection(r"data/statistic_db.db")
+

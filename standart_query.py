@@ -1,11 +1,16 @@
 import os.path
+
 import timeit
 
 import openpyxl
-import psycopg2
 
-database = psycopg2.connect(database="test", user="user1", password="password", host="localhost", port="5432")
-cursor = database.cursor()
+# import psycopg2
+# database = psycopg2.connect(database="test", user="user1", password="password", host="localhost", port="5432")
+# cursor = database.cursor()
+
+import sqlite3
+conn = sqlite3.connect('statistic_db.db')
+cursor = conn.cursor()
 
 
 def query(col_name):
@@ -68,7 +73,7 @@ def query(col_name):
         # remove abundant tuple
         col_name_full = [item for t in cursor.fetchall() for item in t]
         end_1 = timeit.timeit()
-        print("get_col_name_time", end_1-start_1)
+        print("get_col_name_time", end_1 - start_1)
 
         get_sub_col_name = """SELECT %s FROM test WHERE id_count=3""" % col_name
         cursor.execute(get_sub_col_name)
@@ -82,7 +87,7 @@ def query(col_name):
             sheet.append(col_name_full)
             book.save("data/statistics_calculated.xlsx")
             end_2 = timeit.timeit()
-            print("write_col_name_to_file_time", end_2-start_2)
+            print("write_col_name_to_file_time", end_2 - start_2)
         if not sub_col_name_full == ['']:
             book = openpyxl.load_workbook("data/statistics_calculated.xlsx")
             sheet = book.active
@@ -90,7 +95,7 @@ def query(col_name):
             book.save("data/statistics_calculated.xlsx")
 
         start_3 = timeit.timeit()
-        #SELECT distinct data and GROUP & COUNT values
+        # SELECT distinct data and GROUP & COUNT values
         query_data = """SELECT DISTINCT(%s) FROM test WHERE %s <> '' AND id_count > 3 """ % (col_name, col_name)
         cursor.execute(query_data)
         global data2
@@ -98,15 +103,16 @@ def query(col_name):
         data2 = [item for t in data2 for item in t]
         data2 = [el.replace("'", "''") for el in data2]
         end_3 = timeit.timeit()
-        print("get distinct elements", end_3-start_3)
+        print("get distinct elements", end_3 - start_3)
 
         start_7 = timeit.timeit()
         for el in data2:
             start_4 = timeit.timeit()
-            cursor.execute("""SELECT %s,Count(*) FROM test WHERE %s='%s' GROUP BY %s """ % (col_name, col_name, el, col_name))
+            cursor.execute(
+                """SELECT %s,Count(*) FROM test WHERE %s='%s' GROUP BY %s """ % (col_name, col_name, el, col_name))
             rez = cursor.fetchall()
             end_4 = timeit.timeit()
-            print("count values for all elements", end_4-start_4)
+            print("count values for all elements", end_4 - start_4)
 
             start_6 = timeit.timeit()
             book = openpyxl.load_workbook("data/statistics_calculated.xlsx")
@@ -114,10 +120,9 @@ def query(col_name):
             sheet.append(rez[0])
             book.save("data/statistics_calculated.xlsx")
             end_6 = timeit.timeit()
-            print("write each element to file", end_6-start_6)
+            print("write each element to file", end_6 - start_6)
         end_7 = timeit.timeit()
-        print("wrote all element", end_7-start_7)
-
+        print("wrote all element", end_7 - start_7)
 
     # Save to txt
 
@@ -125,5 +130,3 @@ def query(col_name):
     #     f.write(str(rez))
     #     f.write("\n")
     #     f.close()
-
-

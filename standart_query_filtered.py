@@ -1,8 +1,12 @@
 import openpyxl
-import psycopg2
+# import psycopg2
+#
+# database = psycopg2.connect(database="test", user="user1", password="password", host="localhost", port="5432")
+# cursor = database.cursor()
 
-database = psycopg2.connect(database="test", user="user1", password="password", host="localhost", port="5432")
-cursor = database.cursor()
+import sqlite3
+conn = sqlite3.connect('statistic_db.db')
+cursor = conn.cursor()
 
 
 def query_filter(col_name, filter_col_1, filter_val_1,
