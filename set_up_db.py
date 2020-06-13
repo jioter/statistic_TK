@@ -1,14 +1,16 @@
 import xlrd
 import psycopg2
-from pprint import pprint
 
+sheet_name = "Лист4"
+
+# try except
 book = xlrd.open_workbook("data/statistics.xlsx")
-sheet = book.sheet_by_name("Лист4")
+sheet = book.sheet_by_name(sheet_name)
 
 database = psycopg2.connect(database="test", user="user1", password="password", host="localhost", port="5432")
 cursor = database.cursor()
 
-query = """INSERT INTO test (ID, COL_1, COL_2, COL_3, COL_4, COL_5, COL_6, COL_7, COL_8, COL_9,
+query_setup = """INSERT INTO test (ID, COL_1, COL_2, COL_3, COL_4, COL_5, COL_6, COL_7, COL_8, COL_9,
               COL_10, COL_11, COL_12, COL_13, COL_14, COL_15, COL_16, COL_17, COL_18,
               COL_19, COL_20, COL_21, COL_22, COL_23, COL_24, COL_25, COL_26, COL_27,
               COL_28, COL_29, COL_30, COL_31, COL_32, COL_33, COL_34, 
@@ -134,11 +136,11 @@ for r in range(1, sheet.nrows):
               COL_80, COL_81, COL_82, COL_83, COL_84, COL_85, COL_86, COL_87, COL_88,
               COL_89, COL_90, COL_91, COL_92, COL_93, COL_94, COL_95, COL_96)
 
-    cursor.execute(query, values)
+    cursor.execute(query_setup, values)
 
-query = """SELECT * FROM test"""
-r = cursor.execute(query)
-pprint(r)
+# query = """SELECT * FROM test"""
+# r = cursor.execute(query)
+# pprint(r)
 
 
 cursor.close()
