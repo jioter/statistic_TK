@@ -1,11 +1,12 @@
+import sqlite3
+
 import openpyxl
+
 # import psycopg2
 #
 # database = psycopg2.connect(database="test", user="user1", password="password", host="localhost", port="5432")
 # cursor = database.cursor()
-
-import sqlite3
-conn = sqlite3.connect('statistic_db.db')
+conn = sqlite3.connect('data/statistic_db.db')
 cursor = conn.cursor()
 
 

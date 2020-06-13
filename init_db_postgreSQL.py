@@ -1,4 +1,4 @@
-
+# import psycopg2
 # database = psycopg2.connect(database="postgres", user="user1", password="password", host="localhost", port="5432")
 # cursor = database.cursor()
 
@@ -115,3 +115,7 @@ COL_94 VARCHAR,
 COL_95 VARCHAR,
 COL_96 VARCHAR
 );
+
+# database.commit()
+
+# database.close()

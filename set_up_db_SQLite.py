@@ -1,30 +1,25 @@
-import xlrd
-# import psycopg2
-
-sheet_name = "Лист4"
-
-# try except
-book = xlrd.open_workbook("data/statistics.xlsx")
-sheet = book.sheet_by_name(sheet_name)
-
 import sqlite3
 from sqlite3 import Error
 
+import xlrd
+
+# take sheet name
+xls = xlrd.open_workbook(r'data/statistics.xlsx', on_demand=True)
+
+# try except
+book = xlrd.open_workbook("data/statistics.xlsx")
+sheet = book.sheet_by_name(xls.sheet_names()[0])
 
 try:
     conn = sqlite3.connect(r"data/statistic_db.db")
-    # print(sqlite3.version)
 except Error as e:
     print(e)
 
 cursor = conn.cursor()
 
-
-# database = psycopg2.connect(database="test", user="user1", password="password", host="localhost", port="5432")
-# cursor = database.cursor()
-
 cursor.execute("""CREATE TABLE IF NOT EXISTS test (
- ID VARCHAR,
+ id_count INTEGER PRIMARY KEY,
+ record_number VARCHAR,
  COL_1 VARCHAR,
  COL_2 VARCHAR,
  COL_3 VARCHAR,
@@ -123,7 +118,7 @@ COL_95 VARCHAR,
 COL_96 VARCHAR
 );""")
 
-query_setup = """INSERT INTO test(ID, COL_1, COL_2, COL_3, COL_4, COL_5, COL_6, COL_7, COL_8, COL_9,
+query_setup = """INSERT INTO test(record_number, COL_1, COL_2, COL_3, COL_4, COL_5, COL_6, COL_7, COL_8, COL_9,
               COL_10, COL_11, COL_12, COL_13, COL_14, COL_15, COL_16, COL_17, COL_18,
               COL_19, COL_20, COL_21, COL_22, COL_23, COL_24, COL_25, COL_26, COL_27,
               COL_28, COL_29, COL_30, COL_31, COL_32, COL_33, COL_34,
@@ -139,7 +134,7 @@ query_setup = """INSERT INTO test(ID, COL_1, COL_2, COL_3, COL_4, COL_5, COL_6, 
               ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"""
 
 for r in range(1, sheet.nrows):
-    ID = str(sheet.cell(r, 0).value)
+    record_number = str(sheet.cell(r, 0).value)
     COL_1 = str(sheet.cell(r, 1).value)
     COL_2 = str(sheet.cell(r, 2).value)
     COL_3 = str(sheet.cell(r, 3).value)
@@ -237,7 +232,7 @@ for r in range(1, sheet.nrows):
     COL_95 = str(sheet.cell(r, 95).value)
     COL_96 = str(sheet.cell(r, 96).value)
 
-    values = (ID, COL_1, COL_2, COL_3, COL_4, COL_5, COL_6, COL_7, COL_8, COL_9,
+    values = (record_number, COL_1, COL_2, COL_3, COL_4, COL_5, COL_6, COL_7, COL_8, COL_9,
               COL_10, COL_11, COL_12, COL_13, COL_14, COL_15, COL_16, COL_17, COL_18,
               COL_19, COL_20, COL_21, COL_22, COL_23, COL_24, COL_25, COL_26, COL_27,
               COL_28, COL_29, COL_30, COL_31, COL_32, COL_33, COL_34,
@@ -249,25 +244,12 @@ for r in range(1, sheet.nrows):
               COL_80, COL_81, COL_82, COL_83, COL_84, COL_85, COL_86, COL_87, COL_88,
               COL_89, COL_90, COL_91, COL_92, COL_93, COL_94, COL_95, COL_96)
 
-    print(values)
-    # for el in values:
-    #     if not isinstance(el, str):
-    #         print("fork")
     cursor.execute(query_setup, values)
 
 # query = """SELECT * FROM test"""
 # r = cursor.execute(query)
 # pprint(r)
 
-
-
-
-
-
 conn.commit()
 
 cursor.close()
-
-# database.commit()
-
-# database.close()
